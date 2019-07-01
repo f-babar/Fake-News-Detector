@@ -1,4 +1,4 @@
-#Fake News Detector
+# Fake News Detector
 This project used various natural language processing techniques and machine learning algorithms to classifty fake news articles using sci-kit libraries from python.
 
 ## Installation & Development Setup
