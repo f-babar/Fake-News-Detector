@@ -1,78 +1,39 @@
 import pandas as pd
-import numpy as np
 import nltk
 from nltk.stem import SnowballStemmer
 from nltk.stem.porter import PorterStemmer
-from nltk.tokenize import word_tokenize
-import seaborn as sb
-
 
 fake_file = 'dataset/Fake.csv'
 true_file = 'dataset/True.csv'
 
-train_news = pd.read_csv(fake_file)[:5000]
-test_news = pd.read_csv(true_file)[:5000]
-valid_news = pd.read_csv(true_file)[:5000]
+fake_news_data = pd.read_csv(fake_file)
+true_news_data = pd.read_csv(true_file)
+fake_news_data["label"] = 0
+true_news_data["label"] = 1
 
-# data observation
-def data_obs():
-    print("training dataset size:")
-    print(train_news.shape)
-    print(train_news.head(10))
+train_data = pd.concat([fake_news_data.head(200),
+                        true_news_data.head(200)])
 
-    print(test_news.shape)
-    print(test_news.head(10))
+test_data = pd.concat([fake_news_data.tail(200),
+                        true_news_data.tail(200)])
 
-    print(valid_news.shape)
-    print(valid_news.head(10))
 
-#data_obs()
+def remove_stopwords(data):
+    stopwords = set(nltk.corpus.stopwords.words('english'))
+    return data.apply(lambda x: ' '
+                      .join([word for word in x.split() if word not in (stopwords)]))
 
-# distribution of classes for prediction
-def create_distribution(dataFile):
-    return sb.countplot(x='subject', data=dataFile, palette='hls')
 
-#by calling below we can see that training, test and valid data seems to be failry evenly distributed between the classes
-create_distribution(train_news)
-create_distribution(test_news)
-create_distribution(valid_news)
+def stem_tokens(data):
+    stemmer = PorterStemmer()  # SnowballStemmer('english')
+    data = data.apply(lambda x: filter(None, x.split(" ")))
+    data = data.apply(lambda x : [stemmer.stem(y) for y in x])
+    return data.apply(lambda x : " ".join(x))
 
-def data_qualityCheck():
-    print("Checking data qualitites...")
-    train_news.isnull().sum()
-    train_news.info()
+train_data['text'] = remove_stopwords(train_data['text'])
+train_data['text'] = stem_tokens(train_data['text'])
 
-    print("check finished.")
-
-    # below datasets were used to
-    test_news.isnull().sum()
-    test_news.info()
-
-    valid_news.isnull().sum()
-    valid_news.info()
-
-# data_qualityCheck()
-
-eng_stemmer = SnowballStemmer('english')
-stopwords = set(nltk.corpus.stopwords.words('english'))
-
-#Stemming
-def stem_tokens(tokens, stemmer):
-    stemmed = []
-    for token in tokens:
-        stemmed.append(stemmer.stem(token))
-    return stemmed
-
-#process the data
-def process_data(data,exclude_stopword=True,stem=True):
-    tokens = [w.lower() for w in data]
-    tokens_stemmed = tokens
-    tokens_stemmed = stem_tokens(tokens, eng_stemmer)
-    tokens_stemmed = [w for w in tokens_stemmed if w not in stopwords ]
-    return tokens_stemmed
-
-#creating ngrams
-#unigram
+#creating n-grams
 def create_unigram(words):
     assert type(words) == list
     return words
@@ -94,10 +55,4 @@ def create_bigrams(words):
         lst = create_unigram(words)
     return lst
 
-porter = PorterStemmer()
 
-def tokenizer(text):
-    return text.split()
-
-def tokenizer_porter(text):
-    return [porter.stem(word) for word in text.split()]
