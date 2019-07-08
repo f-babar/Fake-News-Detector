@@ -2,7 +2,8 @@ import pandas as pd
 import nltk
 from nltk.stem import SnowballStemmer
 from nltk.stem.porter import PorterStemmer
-
+import matplotlib.pyplot as plt
+# nltk.download()
 fake_file = 'dataset/Fake.csv'
 true_file = 'dataset/True.csv'
 
@@ -11,12 +12,17 @@ true_news_data = pd.read_csv(true_file)
 fake_news_data["label"] = 0
 true_news_data["label"] = 1
 
-train_data = pd.concat([fake_news_data.head(200),
-                        true_news_data.head(200)])
+train_data = pd.concat([fake_news_data.head(500),
+                        true_news_data.head(500)])
 
-test_data = pd.concat([fake_news_data.tail(200),
-                        true_news_data.tail(200)])
+test_data = pd.concat([fake_news_data.tail(500),
+                        true_news_data.tail(500)])
 
+train_data = train_data.sample(frac=1)
+test_data = test_data.sample(frac=1)
+
+
+subjects = fake_news_data['subject'].value_counts()
 
 def remove_stopwords(data):
     stopwords = set(nltk.corpus.stopwords.words('english'))

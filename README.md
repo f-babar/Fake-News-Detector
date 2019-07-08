@@ -9,10 +9,16 @@ This project used various natural language processing techniques and machine lea
 git clone https://github.com/f-babar/Fake-News-Detector.git
 ```
 
-2. Got to the project directory and Run the following command:
+2. Go to the project directory and Run the following command:
 
 ```sh
 pip install -r requirements.txt
 
 ```
 This commnad will install all the development dependencies for the project to run.
+
+NLTK is one of the dependencies, to download the full collection of nltk, type `python.exe` in your command line which will take you to the Python interpretor.  
+     Then, enter
+     
+      >> import nltk 
+      >> nltk.download()
