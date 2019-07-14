@@ -22,3 +22,8 @@ NLTK is one of the dependencies, to download the full collection of nltk, type `
      
       >> import nltk 
       >> nltk.download()
+      
+## Evaluation & Debugging
+
+1. To run the code and evaluate the classifiers, execute the evaluation.py file
+2. To run the final version of Classifier, run the classifer.py

@@ -37,5 +37,5 @@ tagged_sentences = nltk.corpus.treebank.tagged_sents()
 cutoff = int(.75 * len(tagged_sentences))
 training_sentences = DataPrep.train_data['text']
 
-# print("******** Tagged Sentences: ******** \n")
-# print(tagged_sentences)
+print("******** Tagged Sentences: ******** \n")
+print(tagged_sentences)
